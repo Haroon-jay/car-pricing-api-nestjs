@@ -8,12 +8,15 @@ import {
   Param,
   Patch,
   Query,
-  Delete
+  Delete,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
+import { Serialize } from 'src/interceptors/serialize.interceptor';
+import { UserDTO } from './dtos/user.dto';
 
+@Serialize(UserDTO)
 @Controller('auth')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
@@ -33,6 +36,8 @@ export class UsersController {
       throw new HttpException(err.message, err.status ||  HttpStatus.BAD_REQUEST);
     });
   }
+
+
   @Get()
   async findByEmail(@Query('email') email: string) {
     return this.usersService.findByEmail(email).catch((err) => {
