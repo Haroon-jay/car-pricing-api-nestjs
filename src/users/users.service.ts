@@ -12,9 +12,13 @@ export class UsersService {
        const user = this.usersRepository.create({email, password});
        return this.usersRepository.save(user);
     }
+    async find(){
+        return []
+    }
 
     //find one by id
     findOne(id:number){
+        if(!id)return null;
         return this.usersRepository.findOneBy({id});
     }
 
@@ -40,3 +44,13 @@ export class UsersService {
    } 
 
 }
+
+
+// function (){
+//     var dataLayer = window.dataLayer || [];
+//    return dataLayer.reverse().find(function(item){
+//         if(!item.event.includes('gtm')){
+//             return true;
+//         }
+//     })
+// }
