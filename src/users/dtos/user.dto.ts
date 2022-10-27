@@ -1,10 +1,9 @@
-import { Expose } from 'class-transformer'
+import { Expose } from 'class-transformer';
 
+export class UserDto {
+  @Expose()
+  id: number;
 
-export class UserDTO {
-    @Expose()
-    id:number;
-    
-    @Expose()
-    email:string;
+  @Expose()
+  email: string;
 }
