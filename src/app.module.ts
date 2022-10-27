@@ -1,20 +1,36 @@
-import { Module } from '@nestjs/common';
+import { Module, ValidationPipe } from '@nestjs/common';
+import { APP_PIPE } from '@nestjs/core';
 import { User } from './users/user.entity';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { MiddlewareConsumer } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
 import { ReportsModule } from './reports/reports.module';
 import { Report } from './reports/report.entity';
+import cookieSession from 'cookie-session';
 
 @Module({
   imports: [TypeOrmModule.forRoot({
     type:'sqlite',
-    database:'db.sqlite',
+    database: 'db.sqlite',
     entities:[User,Report],
     synchronize:true
   }), UsersModule, ReportsModule],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, {
+    provide: APP_PIPE,
+    useValue: new ValidationPipe({
+      whitelist: true,
+    })
+  }],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(cookieSession({
+      signed: false,
+      secure: false,
+      keys: ['asdfasdf']
+    })).forRoutes('*');
+  }
+}
